@@ -1,0 +1,94 @@
+SPRING BOOT + SQLITE PROJECT ROADMAP
+=====================================
+
+ROADMAP
+-------
+1. Install prerequisites
+   - JDK 17+ (Spring Boot 3.x requires it)
+   - Maven or rely on the Maven/Gradle wrapper bundled by Spring Initializr
+     (the wrapper still needs a local JDK to run)
+   - Note: this machine currently has no java/mvn/gradle installed.
+
+2. Generate the project skeleton
+   - Use Spring Initializr (https://start.spring.io) or its API via curl
+   - Dependencies: Spring Web (optional, for REST endpoints), Spring Data JPA
+   - SQLite JDBC driver is NOT offered by Initializr, must be added manually
+
+3. Add the SQLite dependencies
+   - org.xerial:sqlite-jdbc            -> the JDBC driver itself
+   - org.hibernate.orm:hibernate-community-dialects
+     -> provides org.hibernate.community.dialect.SQLiteDialect
+     -> needed because Hibernate doesn't bundle SQLite support by default
+
+4. Configure application.properties / application.yml
+   - JDBC URL pointing at a .sqlite file
+   - driver class name
+   - Hibernate dialect
+   - ddl-auto strategy
+
+5. Create the file-based database
+   - Let Hibernate auto-create the schema (ddl-auto=update) on first run
+   - OR point the URL at an existing .sqlite file
+
+6. Write an Entity + Repository
+   - Simple @Entity class + JpaRepository to verify the connection
+
+7. Run and verify
+   - Start the app
+   - Confirm Hibernate connects without dialect/driver errors
+   - Confirm a write/read round-trip
+
+8. (Optional) Flyway/Liquibase for migrations
+   - SQLite support is partial, usually skipped in favor of ddl-auto
+
+
+HOW THE CONFIG FILES WORK
+--------------------------
+
+pom.xml (Maven) or build.gradle (Gradle)
+  Declares dependencies. Spring Boot doesn't know how to talk to SQLite out
+  of the box (no built-in driver, no built-in dialect), so two things must
+  be added by hand:
+
+  <dependency>
+    <groupId>org.xerial</groupId>
+    <artifactId>sqlite-jdbc</artifactId>
+    <version>3.45.x.x</version>
+  </dependency>
+  <dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-community-dialects</artifactId>
+    <version>matches your spring-boot-starter-data-jpa's Hibernate version</version>
+  </dependency>
+
+application.properties (or .yml)
+  This is where Spring Boot's auto-configuration reads connection info:
+
+  spring.datasource.url=jdbc:sqlite:./data/mydb.sqlite
+  spring.datasource.driver-class-name=org.sqlite.JDBC
+  spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+  spring.jpa.hibernate.ddl-auto=update
+  spring.jpa.show-sql=true
+
+  - spring.datasource.url
+      The JDBC URL; for SQLite this is just jdbc:sqlite:<path-to-file>,
+      no host/port/credentials since it's a local file, not a server.
+
+  - spring.datasource.driver-class-name
+      Tells Spring's DataSource auto-config which JDBC driver class to
+      load (normally inferred from the URL prefix, but SQLite isn't in
+      Spring's built-in recognition list, so it's set explicitly).
+
+  - spring.jpa.database-platform
+      Tells Hibernate which SQL dialect to generate (column types,
+      autoincrement syntax, etc. differ enough from MySQL/Postgres that
+      this is mandatory).
+
+  - spring.jpa.hibernate.ddl-auto
+      "update" will create/alter tables based on your @Entity classes;
+      "none" if you're managing schema yourself.
+
+  - Connection pooling (HikariCP, Spring Boot's default) mostly just
+    works, though SQLite's single-writer lock means you'll typically cap
+    maximum-pool-size=1 to avoid SQLITE_BUSY errors under concurrent
+    writes.
