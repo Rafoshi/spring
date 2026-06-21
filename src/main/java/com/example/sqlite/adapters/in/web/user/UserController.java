@@ -1,7 +1,8 @@
 package com.example.sqlite.adapters.in.web.user;
 
-import java.util.List;
-
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.sqlite.adapters.in.web.dto.PagedResponse;
 import com.example.sqlite.adapters.in.web.user.dto.CreateUserRequest;
 import com.example.sqlite.adapters.in.web.user.dto.UpdateUserRequest;
 import com.example.sqlite.adapters.in.web.user.dto.UserResponse;
@@ -43,11 +45,11 @@ public class UserController {
     private final DeleteUserUseCase deleteUserUseCase;
     private final UserDtoMapper userDtoMapper;
 
-    @Operation(summary = "List all users")
+    @Operation(summary = "List all users, paged")
     @ApiResponse(responseCode = "200", description = "Users returned successfully")
     @GetMapping
-    public List<UserResponse> getAllUsers() {
-        return userDtoMapper.toResponseList(listUsersUseCase.execute());
+    public PagedResponse<UserResponse> getAllUsers(@ParameterObject @PageableDefault(size = 20) Pageable pageable) {
+        return userDtoMapper.toPagedResponse(listUsersUseCase.execute(pageable));
     }
 
     @Operation(summary = "Create a user")

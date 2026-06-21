@@ -5,7 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.example.sqlite.adapters.in.web.dto.PagedResponse;
 import com.example.sqlite.adapters.in.web.user.dto.CreateUserRequest;
 import com.example.sqlite.adapters.in.web.user.dto.UserResponse;
 import com.example.sqlite.domain.user.User;
@@ -50,5 +55,25 @@ class UserDtoMapperTest {
         assertThat(user.getId()).isNull();
         assertThat(user.getName()).isEqualTo("Ioshi");
         assertThat(user.getEmail()).isEqualTo("rafa.ioshi@gmail.com");
+    }
+
+    @Test
+    void toPagedResponse_mapsContentAndPageMetadata() {
+        User user = new User();
+        user.setId(1L);
+        user.setName("Ioshi");
+        user.setEmail("rafa.ioshi@gmail.com");
+
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<User> page = new PageImpl<>(List.of(user), pageable, 1);
+
+        PagedResponse<UserResponse> response = mapper.toPagedResponse(page);
+
+        assertThat(response.content()).hasSize(1);
+        assertThat(response.content().getFirst().name()).isEqualTo("Ioshi");
+        assertThat(response.page()).isZero();
+        assertThat(response.size()).isEqualTo(20);
+        assertThat(response.totalElements()).isEqualTo(1);
+        assertThat(response.totalPages()).isEqualTo(1);
     }
 }

@@ -11,6 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.example.sqlite.adapters.out.persistence.user.mapper.UserEntityMapper;
 import com.example.sqlite.domain.user.User;
@@ -30,13 +34,18 @@ class UserRepositoryAdapterTest {
     void findAll_delegatesToJpaRepositoryAndMapsToDomain() {
         UserRepositoryAdapter adapter = new UserRepositoryAdapter(userJpaRepository, userEntityMapper);
 
-        List<UserEntity> entities = List.of(new UserEntity());
-        List<User> users = List.of(new User());
+        Pageable pageable = PageRequest.of(0, 20);
+        UserEntity entity = new UserEntity();
+        User user = new User();
+        Page<UserEntity> entityPage = new PageImpl<>(List.of(entity), pageable, 1);
 
-        when(userJpaRepository.findAll()).thenReturn(entities);
-        when(userEntityMapper.toDomainList(entities)).thenReturn(users);
+        when(userJpaRepository.findAll(pageable)).thenReturn(entityPage);
+        when(userEntityMapper.toDomain(entity)).thenReturn(user);
 
-        assertThat(adapter.findAll()).isSameAs(users);
+        Page<User> result = adapter.findAll(pageable);
+
+        assertThat(result.getContent()).containsExactly(user);
+        assertThat(result.getTotalElements()).isEqualTo(1);
     }
 
     @Test

@@ -19,10 +19,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.example.sqlite.adapters.in.web.dto.PagedResponse;
 import com.example.sqlite.adapters.in.web.user.dto.CreateUserRequest;
 import com.example.sqlite.adapters.in.web.user.dto.UpdateUserRequest;
 import com.example.sqlite.adapters.in.web.user.dto.UserResponse;
@@ -56,20 +61,25 @@ class UserControllerTest {
     private UserDtoMapper userDtoMapper;
 
     @Test
-    void getAllUsers_returnsMappedList() throws Exception {
+    void getAllUsers_returnsPagedResponse() throws Exception {
         User user = new User();
         user.setId(1L);
         user.setName("Ioshi");
         user.setEmail("rafa.ioshi@gmail.com");
         UserResponse response = new UserResponse(1L, "Ioshi", "rafa.ioshi@gmail.com");
 
-        when(listUsersUseCase.execute()).thenReturn(List.of(user));
-        when(userDtoMapper.toResponseList(List.of(user))).thenReturn(List.of(response));
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<User> page = new PageImpl<>(List.of(user), pageable, 1);
+        PagedResponse<UserResponse> pagedResponse = new PagedResponse<>(List.of(response), 0, 20, 1, 1);
+
+        when(listUsersUseCase.execute(any(Pageable.class))).thenReturn(page);
+        when(userDtoMapper.toPagedResponse(page)).thenReturn(pagedResponse);
 
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Ioshi"))
-                .andExpect(jsonPath("$[0].email").value("rafa.ioshi@gmail.com"));
+                .andExpect(jsonPath("$.content[0].name").value("Ioshi"))
+                .andExpect(jsonPath("$.content[0].email").value("rafa.ioshi@gmail.com"))
+                .andExpect(jsonPath("$.totalElements").value(1));
     }
 
     @Test

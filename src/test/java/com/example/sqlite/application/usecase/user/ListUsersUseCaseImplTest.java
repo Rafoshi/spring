@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.example.sqlite.application.portout.user.UserRepositoryPort;
 import com.example.sqlite.domain.user.User;
@@ -27,10 +31,11 @@ class ListUsersUseCaseImplTest {
         user.setId(1L);
         user.setName("Ioshi");
         user.setEmail("rafa.ioshi@gmail.com");
-        List<User> users = List.of(user);
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<User> page = new PageImpl<>(List.of(user), pageable, 1);
 
-        when(userRepositoryPort.findAll()).thenReturn(users);
+        when(userRepositoryPort.findAll(pageable)).thenReturn(page);
 
-        assertThat(useCase.execute()).isSameAs(users);
+        assertThat(useCase.execute(pageable)).isSameAs(page);
     }
 }

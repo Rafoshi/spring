@@ -1,7 +1,7 @@
 package com.example.sqlite.application.usecase.user;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.sqlite.application.portin.user.ListUsersUseCase;
@@ -17,7 +17,7 @@ public class ListUsersUseCaseImpl implements ListUsersUseCase {
     private final UserRepositoryPort userRepositoryPort;
 
     @Override
-    public List<User> execute() {
-        return userRepositoryPort.findAll();
+    public Page<User> execute(Pageable pageable) {
+        return userRepositoryPort.findAll(pageable);
     }
 }

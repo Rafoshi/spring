@@ -1,8 +1,9 @@
 package com.example.sqlite.adapters.out.persistence.user;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import com.example.sqlite.adapters.out.persistence.user.mapper.UserEntityMapper;
@@ -20,8 +21,8 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     private final UserEntityMapper userEntityMapper;
 
     @Override
-    public List<User> findAll() {
-        return userEntityMapper.toDomainList(userJpaRepository.findAll());
+    public Page<User> findAll(Pageable pageable) {
+        return userJpaRepository.findAll(pageable).map(userEntityMapper::toDomain);
     }
 
     @Override
