@@ -6,14 +6,13 @@ import com.example.sqlite.application.portin.CreateUserUseCase;
 import com.example.sqlite.application.portout.UserRepositoryPort;
 import com.example.sqlite.domain.User;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
     private final UserRepositoryPort userRepositoryPort;
-
-    public CreateUserUseCaseImpl(UserRepositoryPort userRepositoryPort) {
-        this.userRepositoryPort = userRepositoryPort;
-    }
 
     @Override
     public User execute(User user) {

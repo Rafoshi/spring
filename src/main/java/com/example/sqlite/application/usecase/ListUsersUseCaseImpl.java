@@ -8,14 +8,13 @@ import com.example.sqlite.application.portin.ListUsersUseCase;
 import com.example.sqlite.application.portout.UserRepositoryPort;
 import com.example.sqlite.domain.User;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ListUsersUseCaseImpl implements ListUsersUseCase {
 
     private final UserRepositoryPort userRepositoryPort;
-
-    public ListUsersUseCaseImpl(UserRepositoryPort userRepositoryPort) {
-        this.userRepositoryPort = userRepositoryPort;
-    }
 
     @Override
     public List<User> execute() {

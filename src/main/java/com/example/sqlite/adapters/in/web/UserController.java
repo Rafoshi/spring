@@ -23,21 +23,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Users", description = "User management endpoints")
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final ListUsersUseCase listUsersUseCase;
     private final CreateUserUseCase createUserUseCase;
     private final UserDtoMapper userDtoMapper;
-
-    public UserController(ListUsersUseCase listUsersUseCase, CreateUserUseCase createUserUseCase, UserDtoMapper userDtoMapper) {
-        this.listUsersUseCase = listUsersUseCase;
-        this.createUserUseCase = createUserUseCase;
-        this.userDtoMapper = userDtoMapper;
-    }
 
     @Operation(summary = "List all users")
     @ApiResponse(responseCode = "200", description = "Users returned successfully")
