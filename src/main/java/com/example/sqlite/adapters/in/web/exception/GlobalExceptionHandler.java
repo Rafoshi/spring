@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDuplicateEmail(DataIntegrityViolationException ex) {
+    public ResponseEntity<String> handleDuplicateEmail() {
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already in use");
     }
 
