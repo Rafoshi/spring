@@ -24,4 +24,9 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
     public List<User> findAll() {
         return userEntityMapper.toDomainList(userJpaRepository.findAll());
     }
+
+    @Override
+    public User save(User user) {
+        return userEntityMapper.toDomain(userJpaRepository.save(userEntityMapper.toEntity(user)));
+    }
 }

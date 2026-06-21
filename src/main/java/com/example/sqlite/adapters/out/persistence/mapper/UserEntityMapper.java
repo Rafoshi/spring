@@ -13,4 +13,6 @@ public interface UserEntityMapper {
     User toDomain(UserEntity entity);
 
     List<User> toDomainList(List<UserEntity> entities);
+
+    UserEntity toEntity(User user);
 }
