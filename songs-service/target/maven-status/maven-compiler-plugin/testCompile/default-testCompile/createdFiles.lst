@@ -1,0 +1,9 @@
+com/example/songs/adapters/out/persistence/song/mapper/SongEntityMapperTest.class
+com/example/songs/SongsApplicationTests.class
+com/example/songs/application/usecase/song/ListSongsUseCaseImplTest.class
+com/example/songs/application/usecase/song/CreateSongUseCaseImplTest.class
+com/example/songs/adapters/out/persistence/song/SongRepositoryAdapterTest.class
+com/example/songs/adapters/in/web/song/SongControllerTest.class
+com/example/songs/adapters/in/web/song/mapper/SongDtoMapperTest.class
+com/example/songs/application/usecase/song/UpdateSongUseCaseImplTest.class
+com/example/songs/application/usecase/song/DeleteSongUseCaseImplTest.class

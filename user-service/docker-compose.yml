@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  songs:
+    build: ./songs-service
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./songs-service/data:/app/data
+    restart: unless-stopped
