@@ -1,9 +1,0 @@
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/SongsApplicationTests.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/adapters/in/web/song/SongControllerTest.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/adapters/in/web/song/mapper/SongDtoMapperTest.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/adapters/out/persistence/song/SongRepositoryAdapterTest.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/adapters/out/persistence/song/mapper/SongEntityMapperTest.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/application/usecase/song/CreateSongUseCaseImplTest.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/application/usecase/song/DeleteSongUseCaseImplTest.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/application/usecase/song/ListSongsUseCaseImplTest.java
-/home/ioshi/www/spring/songs-service/src/test/java/com/example/songs/application/usecase/song/UpdateSongUseCaseImplTest.java
