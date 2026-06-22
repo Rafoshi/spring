@@ -40,7 +40,7 @@ docker compose up --build songs-service
 
 Os dados ficam persistidos em `user-service/data/` e `songs-service/data/` (montados como volume), sobrevivendo a `docker compose down`.
 
-Para rodar localmente sem Docker (Maven), veja o `CLAUDE.md` de cada serviço — em geral:
+Para rodar localmente sem Docker (Maven) em geral:
 
 ```bash
 cd user-service && ./mvnw spring-boot:run
