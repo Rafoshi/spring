@@ -14,3 +14,9 @@ services:
     volumes:
       - ./songs-service/data:/app/data
     restart: unless-stopped
+
+  health-checker-service:
+    build: ./health-checker-service
+    ports:
+      - "8082:8082"
+    restart: unless-stopped
